@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Calculator</title>
+  <!-- Import React and ReactDOM from CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Import Babel to enable JSX in the browser -->
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    /* Basic reset */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #f5f7fa;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .calculator {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 300px;
+    }
+    .display {
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: right;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      overflow-x: auto;
+    }
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .calc-button {
+      padding: 15px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: #e0e0e0;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .calc-button.operator {
+      background: #ffb74d;
+      color: #fff;
+    }
+    .calc-button.equal {
+      background: #4db6ac;
+      color: #fff;
+      grid-column: span 2;
+    }
+    .calc-button.clear {
+      background: #e57373;
+      color: #fff;
+    }
+    .calc-button:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    function Calculator() {
+      const [input, setInput] = React.useState('');
+
+      const appendValue = (value) => {
+        setInput((prev) => prev + value);
+      };
+
+      const clearInput = () => {
+        setInput('');
+      };
+
+      const calculateResult = () => {
+        try {
+          // Evaluate the expression using Function constructor
+          const result = Function('"use strict"; return (' + input + ')')();
+          setInput(String(result));
+        } catch (e) {
+          alert('Ungültige Berechnung');
+        }
+      };
+
+      return (
+        <div className="calculator">
+          <div className="display">{input || '0'}</div>
+          <div className="button-grid">
+            {/* Row 1 */}
+            <button className="calc-button clear" onClick={clearInput}>C</button>
+            <button className="calc-button" onClick={() => appendValue('(')}>(</button>
+            <button className="calc-button" onClick={() => appendValue(')')}>)</button>
+            <button className="calc-button operator" onClick={() => appendValue('/')}>÷</button>
+
+            {/* Row 2 */}
+            <button className="calc-button" onClick={() => appendValue('7')}>7</button>
+            <button className="calc-button" onClick={() => appendValue('8')}>8</button>
+            <button className="calc-button" onClick={() => appendValue('9')}>9</button>
+            <button className="calc-button operator" onClick={() => appendValue('*')}>×</button>
+
+            {/* Row 3 */}
+            <button className="calc-button" onClick={() => appendValue('4')}>4</button>
+            <button className="calc-button" onClick={() => appendValue('5')}>5</button>
+            <button className="calc-button" onClick={() => appendValue('6')}>6</button>
+            <button className="calc-button operator" onClick={() => appendValue('-')}>−</button>
+
+            {/* Row 4 */}
+            <button className="calc-button" onClick={() => appendValue('1')}>1</button>
+            <button className="calc-button" onClick={() => appendValue('2')}>2</button>
+            <button className="calc-button" onClick={() => appendValue('3')}>3</button>
+            <button className="calc-button operator" onClick={() => appendValue('+')}>+</button>
+
+            {/* Row 5 */}
+            <button className="calc-button" onClick={() => appendValue('0')}>0</button>
+            <button className="calc-button" onClick={() => appendValue('.')}>.</button>
+            <button className="calc-button equal" onClick={calculateResult}>=</button>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<Calculator />);
+  </script>
+</body>
+</html>
